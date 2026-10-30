@@ -9,7 +9,7 @@ def carregar_dados(caminho_arquivo):
 
     xls = pd.ExcelFile(caminho_arquivo)
 
-    abas_estadoes = [sheet for sheet in xls.sheet_names if "(CV)" not in sheet]
+    abas_estados = [sheet for sheet in xls.sheet_names if "(CV)" not in sheet]
 
     dados_totais = []
 
