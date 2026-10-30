@@ -38,10 +38,10 @@ caminho_arquivo = r"Tabela_3_Areas_gerais_de_formacao_na_graduacao.xlsx"
 try: 
     df = carregar_dados(caminho_arquivo)
 
-    st.sidebar.header("Estados")
+    st.sidebar.header("estados")
 
-    estado_disponiveis = sorted(df["Estado"].unique(), reverse=True)
-    estado_selecionado = st.sidebar.selectbox("Selecione o Estado:", estado_disponiveis)
+    estado_disponiveis = sorted(df["estado"].unique(), reverse=True)
+    estado_selecionado = st.sidebar.selectbox("Selecione o estado:", estado_disponiveis)
 
     area_disponiveis = df["Area de conhecimento"].unique().tolist()
     area_selecionadas = st.sidebar.multiselect(
