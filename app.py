@@ -24,7 +24,7 @@ def carregar_dados(caminho_arquivo):
         df_estado = df_estado.dropna(subset=["Localidade"])
         df_estado = df_estado[df_estado["Localidade"].astype(str).str.strip() != ""]
 
-        for col in ["Total", "Homem", "Mulher"]:
+        for col in ["Total", "Homens", "Mulheres"]:
             df_estado[col] = pd.to_numeric(df_estado[col], errors="coerce")
 
         df_estado["estado"] = str(estado)
