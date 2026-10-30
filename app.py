@@ -59,3 +59,7 @@ try:
 
     st.title("📊  Pessoas com nível superior completo, por áreas gerais")
     st.markdown("Análise da média de horas semanais dedicadas por pessoas ocupadas de 14 anos ou mais, por sexo.")
+
+except Exception as e:
+    st.error(f"Erro ao carregar o arquivo: {e}")
+    st.info("Certifique-se de que o arquivo 'Tabela 1.1.2.xls' está no mesmo diretório do script")
