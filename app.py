@@ -44,7 +44,7 @@ try:
     estado_selecionado = st.sidebar.selectbox("Selecione o Estado:", estado_disponiveis)
 
     area_disponiveis = df["Area de conhecimento"].unique().tolist()
-    area_disponiveis_selecionadas = st.sidebar.multiselect(
+    area_selecionadas = st.sidebar.multiselect(
         "Selecione as Area de conhecimento:",
         options=area_disponiveis,
         default=["Exatas", "Humanas", "Saúde"]
@@ -54,7 +54,7 @@ try:
     sexo_disponiveis_selecionadas = st.sidebar.multiselect(
         "Selecione o Sexo:",
         options=sexo_disponiveis,
-        default=["Homem", "Mulher"]
+        default=["Homens", "Mulheres"]
     )
 
     st.title("📊  Pessoas com nível superior completo, por áreas gerais")
@@ -70,31 +70,34 @@ try:
     if not df_filtrado.empty:
 
         st.subheader(f"Dados em Tabela ({estado_selecionado})")
-        st.dataframe(df_filtrado[["Localidade", "Total", "Homem", "Mulher"]].reset_index(drop=True), use_container_width=True)
+        st.dataframe(df_filtrado[["Localidade", "Total", "Homens", "Mulheres"]].reset_index(drop=True), use_container_width=True)
 
         st.markdown("---")
         st.subheader("Graficos Comparativos")
 
         col1, col2 = st.columns(2)
 
+
+        # ---
+
         with col1:
 
             df_melted = df_filtrado.melt(
                 id_vars=["Localidade"],
-                value_vars=["Homem", "Mulher"],
-                var_name="Gênero",
-                value_name="Horas Semanais"
+                value_vars=["Homens", "Mulheres"],
+                var_name="Sexo",
+                value_name="Curso Superior"
             )
 
             fig_bar = px.bar(
                 df_melted,
                 x="Localidade",
-                y="Horas Semanais",
-                color="Gênero",
+                y="Curso Superior",
+                color="Sexo",
                 barmode="group",
-                title=f"Média de Horas por Gênero ({estado_selecionado})",
+                title=f"Quantidade de curso superior por estado ({estado_selecionado})",
                 color_discrete_sequence=["#1f77b4", "#e377c2"],
-                labels={"Horas semanais": "Horas/Semana", "Localidade": "Região / UF"}
+                labels={"Curso Superior": "Quantidade", "Localidade": "Região / UF"}
             )
             st.plotly_chart(fig_bar, use_container_width=True)
             
@@ -104,12 +107,12 @@ try:
 
             fig_line = px.line(
                 df_historico,
-                x="estado",
+                x="Area",
                 y="Total",
                 color="Localidade",
                 markers=True,
-                title="Evolução Temporal do Total de Horas Dedicadas",
-                labels={"Total": "Horas/Semana", "estado": "estado"}
+                title="Evolução Temporal do Total da quantidade de cursos superiores",
+                labels={"Total": "Quantidade", "estado": "estado"}
             )
             st.plotly_chart(fig_line, use_container_width=True)
         
