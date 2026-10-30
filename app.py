@@ -33,7 +33,7 @@ def carregar_dados(caminho_arquivo):
     df_completo = pd.concat(dados_totais, ignore_index=True)
     return df_completo
 
-caminho_arquivo = r"Tabela_3_Areas_gerais_de_formacao_na_graduacao.xlsx"
+caminho_arquivo = "Tabela_3_Areas_gerais_de_formacao_na_graduacao.xlsx"
 
 try: 
     df = carregar_dados(caminho_arquivo)
