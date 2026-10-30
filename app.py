@@ -13,7 +13,7 @@ def carregar_dados(caminho_arquivo):
 
     dados_totais = []
 
-    for estado in abas_estado:
+    for estado in abas_estados:
         df_raw = pd.read_excel(xls, sheet_name=estado)
 
         start_idx = df_raw[df_raw.iloc[:, 0] == "Brasil"].index[0]
@@ -33,7 +33,7 @@ def carregar_dados(caminho_arquivo):
     df_completo = pd.concat(dados_totais, ignore_index=True)
     return df_completo
 
-caminho_arquivo = "Tabela_3_Areas_gerais_de_formacao_na_graduacao.xlsx"
+caminho_arquivo = r"Tabela_3_Areas_gerais_de_formacao_na_graduacao.xlsx"
 
 try: 
     df = carregar_dados(caminho_arquivo)
@@ -58,8 +58,64 @@ try:
     )
 
     st.title("📊  Pessoas com nível superior completo, por áreas gerais")
-    st.markdown("Análise da média de horas semanais dedicadas por pessoas ocupadas de 14 anos ou mais, por sexo.")
+    st.markdown("Análise da média de horas semanais dedicadas por pessoas ocupadas de 14 estados ou mais, por sexo.")
+
+
+
+
+
+    # Filtrar DataFrame com base nas seleções
+    df_filtrado = df[(df["estado"] == estado_selecionado) & (df["Localidade"].isin(area_selecionadas))]
+
+    if not df_filtrado.empty:
+
+        st.subheader(f"Dados em Tabela ({estado_selecionado})")
+        st.dataframe(df_filtrado[["Localidade", "Total", "Homem", "Mulher"]].reset_index(drop=True), use_container_width=True)
+
+        st.markdown("---")
+        st.subheader("Graficos Comparativos")
+
+        col1, col2 = st.columns(2)
+
+        with col1:
+
+            df_melted = df_filtrado.melt(
+                id_vars=["Localidade"],
+                value_vars=["Homem", "Mulher"],
+                var_name="Gênero",
+                value_name="Horas Semanais"
+            )
+
+            fig_bar = px.bar(
+                df_melted,
+                x="Localidade",
+                y="Horas Semanais",
+                color="Gênero",
+                barmode="group",
+                title=f"Média de Horas por Gênero ({estado_selecionado})",
+                color_discrete_sequence=["#1f77b4", "#e377c2"],
+                labels={"Horas semanais": "Horas/Semana", "Localidade": "Região / UF"}
+            )
+            st.plotly_chart(fig_bar, use_container_width=True)
+            
+            
+        with col2:
+            df_historico = df[df["Localidade"].isin(area_selecionadas)]
+
+            fig_line = px.line(
+                df_historico,
+                x="estado",
+                y="Total",
+                color="Localidade",
+                markers=True,
+                title="Evolução Temporal do Total de Horas Dedicadas",
+                labels={"Total": "Horas/Semana", "estado": "estado"}
+            )
+            st.plotly_chart(fig_line, use_container_width=True)
+        
+    else:
+        st.warning("Nenhuma localidade selecionada nos filtros da barra lateral.")
 
 except Exception as e:
     st.error(f"Erro ao carregar o arquivo: {e}")
-    st.info("Certifique-se de que o arquivo 'Tabela 1.1.2.xls' está no mesmo diretório do script")
+    st.info("Certifique-se de que o arquivo 'Tabela_3_Areas_gerais_de_formacao_na_graduacao.xlsx' está no mesmo diretório do script")
