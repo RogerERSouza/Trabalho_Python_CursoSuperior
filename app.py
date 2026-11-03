@@ -2,12 +2,12 @@ import streamlit as st
 import pandas as pd
 import plotly.express as px
 
-st.set_page_config(page_title="Curso Superior", layout="wide", page_icon="🎁")
+st.set_page_config(page_title="Curso Superior", layout="wide")
 
 @st.cache_data
 def carregar_dados(caminho_arquivo):
 
-    xls = pd.ExcelFile(caminho_arquivo)
+    xls = pd.ExcelFile(caminho_arquivo, sheet_name="Sheet_1", header=[1,2])
 
     abas_estados = [sheet for sheet in xls.sheet_names if "(CV)" not in sheet]
 
